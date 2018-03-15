@@ -18,6 +18,10 @@ export function checkSala(sala) {
         sala.turn = snapObj.turn || sala.turn;
         sala.lastMove = snapObj.lastMove || sala.lastMove;
 
+        //Juntar com a função do treat move
+        //Mas tem que ver quem ganhou e quem perdeu
+        //e se o último movimento foi feito pelo jogador logado
+        //para bloquear o movimento até que seja a vez dele de novo
         if (checkEnd(
             sala.lastMove.x,
             sala.lastMove.y,
@@ -31,4 +35,21 @@ export function checkSala(sala) {
             }, 500);
         }
     });
+}
+
+export function treatMove(sala) {
+    if (checkEnd(
+        sala.lastMove.x,
+        sala.lastMove.y,
+        sala.turn,
+        sala.grid
+    )) {
+        setTimeout(() => {
+            alert("Você Ganhou");
+            sala.grid = initializeGrid();
+            saveSala(sala);
+        }, 500);
+    }
+
+    saveSala(sala);
 }

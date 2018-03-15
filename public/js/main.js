@@ -5,18 +5,16 @@
 //     console.log(result);
 // });
 import { getConfig } from "./gameConfig.js";
-import { initializeGrid, checkEnd } from "./gameLogic.js";
-import { saveSala, checkSala } from "./database.js";
+import { initializeGrid, checkEnd, clickHandler } from "./gameLogic.js";
+import { saveSala, checkSala, treatMove } from "./database.js";
 
 const config = getConfig();
-
 
 const turnLabel = document.querySelector('#turn-id');
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext('2d');
 
 const cellSize = canvas.width / config.tracks;
-
 
 const sala = {
     grid: null,
@@ -27,7 +25,7 @@ const sala = {
 (function initialize() {
     sala.grid = initializeGrid();
     checkSala(sala);
-    clickHandler();
+    clickHandler(cellSize, canvas, sala, treatMove);
     draw();
 })();
 
@@ -71,32 +69,6 @@ function drawGrid() {
             }
             context.strokeRect(i * cellSize, j * cellSize, cellSize, cellSize);
             context.closePath();
-        }
-    }
-}
-
-
-function clickHandler() {
-    canvas.onclick = function (e) {
-        const x = e.offsetX;
-        const y = e.offsetY;
-        const i = Math.floor(x / cellSize);
-        const j = Math.floor(y / cellSize);
-
-        if (sala.grid[i][j] === config.initialValue) {
-            sala.turn = (++sala.turn % config.numberOfPlayers);
-            sala.grid[i][j] = sala.turn;
-            sala.lastMove = { x: i, y: j };
-
-            if (checkEnd(i, j, sala.turn, sala.grid)) {
-                setTimeout(() => {
-                    alert("Você Ganhou");
-                    sala.grid = initializeGrid();
-                    saveSala(sala);
-                }, 500);
-            }
-
-            saveSala(sala);
         }
     }
 }

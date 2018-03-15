@@ -88,3 +88,20 @@ export function initializeGrid() {
     }
     return grid;
 }
+
+export function clickHandler(cellSize, canvas, sala, onMove) {
+    canvas.onclick = function (e) {
+        const x = e.offsetX;
+        const y = e.offsetY;
+        const i = Math.floor(x / cellSize);
+        const j = Math.floor(y / cellSize);
+
+        if (sala.grid[i][j] === config.initialValue) {
+            sala.turn = (++sala.turn % config.numberOfPlayers);
+            sala.grid[i][j] = sala.turn;
+            sala.lastMove = { x: i, y: j };
+
+            (onMove || function () { })(sala);
+        }
+    }
+}
