@@ -1,14 +1,16 @@
 const database = firebase.database();
 
+const turnLabel = document.querySelector('#turn-id');
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext('2d');
 const tracks = 15;
 const cellSize = canvas.width / tracks;
 const movesToWin = 5;
 const initialValue = 'vazio';
+const numberOfPlayers = 3;
 
 let grid = null;
-let turn = true;
+let turn = 0;
 
 (function initialize() {
     grid = initializeGrid();
@@ -19,7 +21,27 @@ let turn = true;
 
 function draw() {
     drawGrid();
+    updateTurnLabel();
     requestAnimationFrame(draw);
+}
+
+function updateTurnLabel() {
+    turnLabel.innerHTML = `Vez de: ${turn}`;
+    turnLabel.style.background = getBackground((turn + 1) % numberOfPlayers);
+}
+
+function getBackground(turn) {
+    switch (turn) {
+        case 0:
+            return "#FF0000"
+            break;
+        case 1:
+            return "#00FF00"
+            break;
+        case 2:
+            return "#0000FF"
+            break;
+    }
 }
 
 function saveGrid(grid, turn, move) {
@@ -63,11 +85,8 @@ function drawGrid() {
         for (let j = 0; j < grid[i].length; j++) {
             context.beginPath();
             context.strokeStyle = "#000000";
-            if (grid[i][j] === true) {
-                context.fillStyle = "#00FF00";
-                context.fillRect(i * cellSize, j * cellSize, cellSize, cellSize)
-            } else if (grid[i][j] === false) {
-                context.fillStyle = "#FF0000";
+            if (grid[i][j] !== initialValue) {
+                context.fillStyle = getBackground(grid[i][j]);
                 context.fillRect(i * cellSize, j * cellSize, cellSize, cellSize)
             } else {
                 context.fillStyle = "#FFFFFF";
@@ -100,7 +119,7 @@ function clickHandler() {
         const j = Math.floor(y / cellSize);
 
         if (grid[i][j] === initialValue) {
-            turn = !turn;
+            turn = (++turn % numberOfPlayers);
             grid[i][j] = turn;
             if (checkEnd(i, j, turn, grid)) {
                 setTimeout(() => {
