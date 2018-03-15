@@ -1,4 +1,12 @@
 const database = firebase.database();
+// const auth = firebase.auth();
+
+
+// auth.signInWithRedirect(new firebase.auth.FacebookAuthProvider()).then(function (result) {
+//     console.log(result);
+// });
+
+
 
 const turnLabel = document.querySelector('#turn-id');
 const canvas = document.querySelector("canvas");
