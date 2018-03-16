@@ -7,6 +7,7 @@ export function createSala() {
         const dialog = stringToElement(templateString);
         const cancelButton = dialog.querySelector('#cancel');
 
+        //Maybe should remove from the DOM afterwards
         document.body.appendChild(dialog);
 
         // Form cancel button closes the dialog box
