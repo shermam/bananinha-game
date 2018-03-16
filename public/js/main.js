@@ -4,26 +4,30 @@
 // auth.signInWithRedirect(new firebase.auth.FacebookAuthProvider()).then(function (result) {
 //     console.log(result);
 // });
-import { getConfig } from "./gameConfig.js";
 import { initializeGrid, checkEnd, clickHandler } from "./gameLogic.js";
 import { saveSala, checkSala, treatMove } from "./database.js";
-
-const config = getConfig();
 
 const turnLabel = document.querySelector('#turn-id');
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext('2d');
-
-const cellSize = canvas.width / config.tracks;
-
 const sala = {
+    name: "Sala de: ",
+    creatorId: null,
+    players: [], 
     grid: null,
     turn: 0,
-    lastMove: null
+    lastMove: null,
+    numberOfPlayers: 3,
+    movesToWin: 5,
+    tracks: 15,
+    initialValue: 'vazio'
 };
+const cellSize = canvas.width / sala.tracks;
+
+
 
 (function initialize() {
-    sala.grid = initializeGrid();
+    initializeGrid(sala);
     checkSala(sala);
     clickHandler(cellSize, canvas, sala, treatMove);
     draw();
@@ -37,7 +41,7 @@ function draw() {
 
 function updateTurnLabel() {
     turnLabel.innerHTML = `Vez de: ${sala.turn}`;
-    turnLabel.style.background = getBackground((sala.turn + 1) % config.numberOfPlayers);
+    turnLabel.style.background = getBackground((sala.turn + 1) % sala.numberOfPlayers);
 }
 
 function getBackground(turn) {
@@ -60,7 +64,7 @@ function drawGrid() {
         for (let j = 0; j < sala.grid[i].length; j++) {
             context.beginPath();
             context.strokeStyle = "#000000";
-            if (sala.grid[i][j] !== config.initialValue) {
+            if (sala.grid[i][j] !== sala.initialValue) {
                 context.fillStyle = getBackground(sala.grid[i][j]);
                 context.fillRect(i * cellSize, j * cellSize, cellSize, cellSize)
             } else {

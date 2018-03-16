@@ -23,14 +23,11 @@ export function checkSala(sala) {
         //e se o último movimento foi feito pelo jogador logado
         //para bloquear o movimento até que seja a vez dele de novo
         if (checkEnd(
-            sala.lastMove.x,
-            sala.lastMove.y,
-            sala.turn,
-            sala.grid
+            sala
         )) {
             setTimeout(() => {
                 alert("Você Perdeu");
-                sala.grid = initializeGrid();
+                initializeGrid(sala);
                 saveSala(sala);
             }, 500);
         }
@@ -39,14 +36,11 @@ export function checkSala(sala) {
 
 export function treatMove(sala) {
     if (checkEnd(
-        sala.lastMove.x,
-        sala.lastMove.y,
-        sala.turn,
-        sala.grid
+        sala
     )) {
         setTimeout(() => {
             alert("Você Ganhou");
-            sala.grid = initializeGrid();
+            initializeGrid(sala);
             saveSala(sala);
         }, 500);
     }
