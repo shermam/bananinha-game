@@ -16,7 +16,7 @@ export function createSala() {
         });
 
         return new Promise((resolve, reject) => {
-            var a = dialog.showModal();
+            dialog.showModal();
 
             dialog.onclose = function () {
 
