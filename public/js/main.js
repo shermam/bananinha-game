@@ -10,6 +10,7 @@ import { saveSala, checkSala, treatMove } from "./database.js";
 const turnLabel = document.querySelector('#turn-id');
 const canvas = document.querySelector("canvas");
 const context = canvas.getContext('2d');
+const lobby = [];
 const sala = {
     name: "Sala de: ",
     creatorId: null,
@@ -17,7 +18,7 @@ const sala = {
     grid: null,
     turn: 0,
     lastMove: null,
-    numberOfPlayers: 3,
+    numberOfPlayers: 2,
     movesToWin: 5,
     tracks: 15,
     initialValue: 'vazio'
@@ -28,6 +29,7 @@ const cellSize = canvas.width / sala.tracks;
 
 (function initialize() {
     initializeGrid(sala);
+    saveSala(sala);
     checkSala(sala);
     clickHandler(cellSize, canvas, sala, treatMove);
     draw();

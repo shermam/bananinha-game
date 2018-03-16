@@ -1,5 +1,7 @@
 export function checkEnd(sala) {
-
+    if(!sala.lastMove){
+        return;
+    }
     let x = sala.lastMove.x;
     let y = sala.lastMove.y;
 
