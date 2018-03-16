@@ -1,40 +1,54 @@
-const dialog = document.getElementById('create-sala-dialog');
-const cancelButton = document.getElementById('cancel');
-
-// Form cancel button closes the dialog box
-cancelButton.addEventListener('click', function () {
-    dialog.close();
-});
+const templatePromise = fetch('./templates/createSalaDialog.html').then(r => r.text());
 
 export function createSala() {
 
-    return new Promise((resolve, reject) => {
-        var a = dialog.showModal();
+    return templatePromise.then(templateString => {
 
-        dialog.onclose = function () {
+        const dialog = stringToElement(templateString);
+        const cancelButton = dialog.querySelector('#cancel');
 
-            if (dialog.returnValue) {
+        document.body.appendChild(dialog);
 
-                const form = dialog.querySelector('form');
-                const values = Array.from(form.elements).reduce((obj, element) => {
-                    if (element.name) {
-                        obj[element.name] = element.valueAsNumber || element.value;
-                    }
-                    return obj;
-                }, {});
+        // Form cancel button closes the dialog box
+        cancelButton.addEventListener('click', function () {
+            dialog.close();
+        });
 
-                resolve({
-                    ...values,
-                    creatorId: null,
-                    players: [],
-                    grid: null,
-                    turn: 0,
-                    lastMove: null,
-                    initialValue: 'vazio'
-                });
-            } else {
-                reject('Cancelado pelo usuário');
+        return new Promise((resolve, reject) => {
+            var a = dialog.showModal();
+
+            dialog.onclose = function () {
+
+                if (dialog.returnValue) {
+
+                    const form = dialog.querySelector('form');
+                    const values = Array.from(form.elements).reduce((obj, element) => {
+                        if (element.name) {
+                            obj[element.name] = element.valueAsNumber || element.value;
+                        }
+                        return obj;
+                    }, {});
+
+                    resolve({
+                        ...values,
+                        creatorId: null,
+                        players: [],
+                        grid: null,
+                        turn: 0,
+                        lastMove: null,
+                        initialValue: 'vazio'
+                    });
+                } else {
+                    reject('Cancelado pelo usuário');
+                }
             }
-        }
+        });
     });
+}
+
+
+function stringToElement(string) {
+    const template = document.createElement('template');
+    template.innerHTML = string;
+    return template.content.firstChild;
 }
