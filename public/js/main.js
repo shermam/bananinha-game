@@ -20,5 +20,5 @@ const lobby = [];
             checkSala(sala);
             clickHandler(canvas, sala, treatMove);
             draw(sala);
-        });
+        }).catch(console.log);
 })();

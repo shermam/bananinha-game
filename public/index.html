@@ -1,33 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport"
-              content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible"
-              content="ie=edge">
-        <title>Bananinha Game</title>
-        <link rel="stylesheet"
-              href="./css/main.css">
-    </head>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport"
+		      content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible"
+		      content="ie=edge">
+		<title>Bananinha Game</title>
+		<link rel="stylesheet"
+		      href="./css/main.css">
+	</head>
 
-    <body>
+	<body>
 
-        <h1 id="turn-id"></h1>
 
-        <canvas width="600"
-                height="600"></canvas>
+		<dialog id="create-sala-dialog">
+			<form method="dialog">
+				<section>
+					<p>
+						<label for="nome">Nome da sala:</label>
+						<input id="nome"
+						       name="nome"
+						       type="text" />
+					</p>
+					<p>
+						<label for="numberOfPlayers">Número de Jogadores:</label>
+						<input id="numberOfPlayers"
+						       name="numberOfPlayers"
+						       type="number" />
+					</p>
+					<p>
+						<label for="tracks">Número de Linhas e Colunas:</label>
+						<input id="tracks"
+						       name="tracks"
+						       type="number" />
+					</p>
+					<p>
+						<label for="movesToWin">Número de Jogadas para ganhar:</label>
+						<input id="movesToWin"
+						       name="movesToWin"
+						       type="number" />
+					</p>
 
-        <script src="/__/firebase/4.11.0/firebase-app.js"></script>
-        <script src="/__/firebase/4.11.0/firebase-auth.js"></script>
-        <script src="/__/firebase/4.11.0/firebase-database.js"></script>
-        <script src="/__/firebase/4.11.0/firebase-messaging.js"></script>
-        <script src="/__/firebase/4.11.0/firebase-storage.js"></script>
-        <script src="/__/firebase/init.js"></script>
+				</section>
+				<menu>
+					<button id="cancel"
+					        type="reset">Cancel</button>
+					<button type="submit"
+					        value="true">Confirm</button>
+				</menu>
+			</form>
+		</dialog>
 
-        <script src="./js/main.js"
-                type="module"></script>
-    </body>
+
+
+		<h1 id="turn-id"></h1>
+
+		<canvas width="600"
+		        height="600"></canvas>
+
+		<script src="/__/firebase/4.11.0/firebase-app.js"></script>
+		<script src="/__/firebase/4.11.0/firebase-auth.js"></script>
+		<script src="/__/firebase/4.11.0/firebase-database.js"></script>
+		<script src="/__/firebase/4.11.0/firebase-messaging.js"></script>
+		<script src="/__/firebase/4.11.0/firebase-storage.js"></script>
+		<script src="/__/firebase/init.js"></script>
+
+		<script src="./js/main.js"
+		        type="module"></script>
+	</body>
 
 </html>
