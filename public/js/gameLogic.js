@@ -1,5 +1,5 @@
 export function checkEnd(sala) {
-    if(!sala.lastMove){
+    if (!sala.lastMove) {
         return;
     }
     let x = sala.lastMove.x;
@@ -90,7 +90,8 @@ export function initializeGrid(sala) {
     return sala.grid;
 }
 
-export function clickHandler(cellSize, canvas, sala, onMove) {
+export function clickHandler(canvas, sala, onMove) {
+    const cellSize = canvas.width / sala.tracks;
     canvas.onclick = function (e) {
         const x = e.offsetX;
         const y = e.offsetY;
