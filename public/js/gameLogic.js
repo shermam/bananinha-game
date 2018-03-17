@@ -90,9 +90,11 @@ export function initializeGrid(sala) {
     return sala.grid;
 }
 
-export function clickHandler(canvas, sala, onMove) {
-    const cellSize = canvas.width / sala.tracks;
-    canvas.onclick = function (e) {
+export function clickHandler(board, sala, onMove) {
+
+    const cellSize = board.canvas.width / sala.tracks;
+
+    board.canvas.onclick = function (e) {
         const x = e.offsetX;
         const y = e.offsetY;
         const i = Math.floor(x / cellSize);

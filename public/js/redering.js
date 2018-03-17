@@ -1,10 +1,18 @@
-export const canvas = document.querySelector("canvas");
-const context = canvas.getContext('2d');
-const turnLabel = document.querySelector('#turn-id');
+export const board = {
+    canvas: null,
+    context: null,
+    turnLabel: null
+};
 
+export function initializeBoard() {
+    board.canvas = document.querySelector("canvas");
+    board.context = board.canvas.getContext('2d');
+    board.turnLabel = document.querySelector('#turn-id');
+}
 
 export function draw(sala) {
-    const cellSize = canvas.width / sala.tracks;
+
+    const cellSize = board.canvas.width / sala.tracks;
 
     (function loop() {
         drawGrid(sala, cellSize);
@@ -15,8 +23,8 @@ export function draw(sala) {
 }
 
 export function updateTurnLabel(sala) {
-    turnLabel.innerHTML = `Vez de: ${sala.turn}`;
-    turnLabel.style.background = getBackground((sala.turn + 1) % sala.numberOfPlayers);
+    board.turnLabel.innerHTML = `Vez de: ${sala.turn}`;
+    board.turnLabel.style.background = getBackground((sala.turn + 1) % sala.numberOfPlayers);
 }
 
 export function getBackground(turn) {
@@ -37,17 +45,17 @@ export function drawGrid(sala, cellSize) {
 
     for (let i = 0; i < sala.grid.length; i++) {
         for (let j = 0; j < sala.grid[i].length; j++) {
-            context.beginPath();
-            context.strokeStyle = "#000000";
+            board.context.beginPath();
+            board.context.strokeStyle = "#000000";
             if (sala.grid[i][j] !== sala.initialValue) {
-                context.fillStyle = getBackground(sala.grid[i][j]);
-                context.fillRect(i * cellSize, j * cellSize, cellSize, cellSize)
+                board.context.fillStyle = getBackground(sala.grid[i][j]);
+                board.context.fillRect(i * cellSize, j * cellSize, cellSize, cellSize)
             } else {
-                context.fillStyle = "#FFFFFF";
-                context.fillRect(i * cellSize, j * cellSize, cellSize, cellSize)
+                board.context.fillStyle = "#FFFFFF";
+                board.context.fillRect(i * cellSize, j * cellSize, cellSize, cellSize)
             }
-            context.strokeRect(i * cellSize, j * cellSize, cellSize, cellSize);
-            context.closePath();
+            board.context.strokeRect(i * cellSize, j * cellSize, cellSize, cellSize);
+            board.context.closePath();
         }
     }
 }
