@@ -1,6 +1,6 @@
 const templatePromise = fetch('./templates/createSalaDialog.html').then(r => r.text());
 
-export function createSala() {
+export function createSala(user) {
 
     return templatePromise.then(templateString => {
 
@@ -32,8 +32,8 @@ export function createSala() {
 
                     resolve({
                         ...values,
-                        creatorId: null,
-                        players: [],
+                        creatorId: user.uid,
+                        players: [{ name: user.displayName, uid: user.uid }],
                         grid: null,
                         turn: 0,
                         lastMove: null,

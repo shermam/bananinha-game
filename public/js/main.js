@@ -1,29 +1,36 @@
-// const auth = firebase.auth();
-// auth.signInWithRedirect(new firebase.auth.FacebookAuthProvider()).then(function (result) {
-//     console.log(result);
-// });
-
 import { createSala } from "./sala.js";
 import { startGame } from "./game.js";
-
-
+import { login } from "./login.js";
+import { renderLobby } from "./renderLobby.js";
 
 const mainElement = document.querySelector('#main-content');
+const lobby = [];
+let user;
 
-fetch('./templates/home.html')
+login()
+    .then(resposta => {
+        user = resposta.user;
+        return fetch('./templates/home.html')
+    })
     .then(r => r.text())
     .then(html => mainElement.innerHTML = html)
     .then(initialize);
 
 function initialize() {
     const createSalaButton = mainElement.querySelector('#create-sala-button');
+    const lobyContainer = mainElement.querySelector('#lobby');
+
     createSalaButton.onclick = function () {
-        createSala()
+        createSala(user)
             .then(sala => {
-                fetch('./templates/game.html')
-                    .then(r => r.text())
-                    .then(html => mainElement.innerHTML = html)
-                    .then(_ => startGame(sala));
+
+                lobby.push(sala);
+                renderLobby(lobyContainer, lobby);
+
+                // fetch('./templates/game.html')
+                //     .then(r => r.text())
+                //     .then(html => mainElement.innerHTML = html)
+                //     .then(_ => startGame(sala));
             }).catch(console.log);
     }
 }
