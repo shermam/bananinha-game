@@ -9,8 +9,8 @@ const mainElement = document.querySelector('#main-content');
 let user;
 
 login()
-    .then(resposta => {
-        user = resposta.user;
+    .then(user => {
+        user = user;
         return fetch('./templates/home.html')
     })
     .then(r => r.text())
