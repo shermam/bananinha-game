@@ -6,6 +6,18 @@ export function saveSala(sala) {
     database.ref('sala').set(sala);
 }
 
+export function saveLobby(sala) {
+    return database.ref('lobby').push(sala);
+}
+
+export function checkLobby(render) {
+    database.ref('lobby').on('value', snap => {
+        const snapObj = snap.val();
+        if (!snapObj) return;
+        render(snapObj);
+    });
+}
+
 export function checkSala(sala) {
     database.ref('sala').on('value', snap => {
         const snapObj = snap.val();

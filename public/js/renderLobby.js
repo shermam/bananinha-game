@@ -1,22 +1,28 @@
-export function renderLobby(container, lobby) {
-    container.innerHTML = `
+export function renderLobby(container) {
+
+    return function (lobby) {
+
+        container.innerHTML = `
         <table>
             <thead>
                 <tr>
                     <th>Sala</th>
+                    <th>Id</th>
                 </tr>
             </thead>
             <tbody>
-                ${lobby.map(sala => `
+                ${Object.keys(lobby).map(key => `
                     <tr>
                         <td>
-                            <a href="#">
-                                ${sala.nome}
+                            <a href="./${key}">
+                                ${lobby[key].nome}
                             </a>
                         </td>
+                        <td>${key}</td>
                     </tr>
                 `).join('')}
             </tbody>
         </table>
-    `;
+        `;
+    }
 }
