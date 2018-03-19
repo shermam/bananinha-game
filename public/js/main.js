@@ -32,6 +32,8 @@ function goHome() {
 
 function goToGame(sala) {
 
+    sala.players = sala.players || [];
+
     sala.players.push({
         name: user.displayName,
         uid: user.uid,
@@ -54,7 +56,7 @@ function initialize() {
 
         createSala(user)
             .then(saveLobby)
-            .then(goToGame)
+            .then(sala => location = `./${sala.key}`)
             .catch(console.log);
     };
 }
