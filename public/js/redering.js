@@ -31,7 +31,7 @@ export function draw(sala) {
 }
 
 export function updateTurnLabel(sala) {
-    board.turnLabel.innerHTML = `Vez de: ${sala.turn}`;
+    board.turnLabel.innerHTML = `Vez de: ${sala.players[sala.turn].name}`;
     board.turnLabel.style.background = getBackground((sala.turn + 1) % sala.numberOfPlayers);
 }
 
