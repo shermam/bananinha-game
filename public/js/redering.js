@@ -1,3 +1,5 @@
+let images;
+
 export const board = {
     canvas: null,
     context: null,
@@ -14,11 +16,17 @@ export function draw(sala) {
 
     const cellSize = board.canvas.width / sala.tracks;
 
-    (function loop() {
+    Promise.all(sala.players.map(user => loadImage(user.img)))
+        .then(_images => {
+            images = _images;
+            loop();
+        });
+
+    function loop() {
         drawGrid(sala, cellSize);
         updateTurnLabel(sala);
         requestAnimationFrame(loop);
-    })();
+    };
 
 }
 
@@ -28,17 +36,7 @@ export function updateTurnLabel(sala) {
 }
 
 export function getBackground(turn) {
-    switch (turn) {
-        case 0:
-            return "#FF0000"
-            break;
-        case 1:
-            return "#00FF00"
-            break;
-        case 2:
-            return "#0000FF"
-            break;
-    }
+    return images[turn];
 }
 
 export function drawGrid(sala, cellSize) {
@@ -48,8 +46,8 @@ export function drawGrid(sala, cellSize) {
             board.context.beginPath();
             board.context.strokeStyle = "#000000";
             if (sala.grid[i][j] !== sala.initialValue) {
-                board.context.fillStyle = getBackground(sala.grid[i][j]);
-                board.context.fillRect(i * cellSize, j * cellSize, cellSize, cellSize)
+                const img = getBackground(sala.grid[i][j]);
+                board.context.drawImage(img, i * cellSize, j * cellSize, cellSize, cellSize)
             } else {
                 board.context.fillStyle = "#FFFFFF";
                 board.context.fillRect(i * cellSize, j * cellSize, cellSize, cellSize)
@@ -58,4 +56,13 @@ export function drawGrid(sala, cellSize) {
             board.context.closePath();
         }
     }
+}
+
+function loadImage(url) {
+    return new Promise((resolve, reject) => {
+        const img = new Image;
+        img.onload = _ => resolve(img);
+        img.onerror = reject;
+        img.src = url;
+    });
 }

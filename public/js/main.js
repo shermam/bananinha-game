@@ -32,6 +32,12 @@ function goHome() {
 
 function goToGame(sala) {
 
+    sala.players.push({
+        name: user.displayName,
+        uid: user.uid,
+        img: user.photoURL
+    });
+
     fetch('./templates/game.html')
         .then(r => r.text())
         .then(html => mainElement.innerHTML = html)

@@ -33,7 +33,7 @@ export function createSala(user) {
                     resolve({
                         ...values,
                         creatorId: user.uid,
-                        players: [{ name: user.displayName, uid: user.uid }],
+                        players: [],
                         grid: null,
                         turn: 0,
                         lastMove: null,
