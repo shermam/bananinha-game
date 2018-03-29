@@ -89,23 +89,3 @@ export function initializeGrid(sala) {
     }
     return sala.grid;
 }
-
-export function clickHandler(board, sala, onMove) {
-
-    const cellSize = board.canvas.width / sala.tracks;
-
-    board.canvas.onclick = function (e) {
-        const x = e.offsetX;
-        const y = e.offsetY;
-        const i = Math.floor(x / cellSize);
-        const j = Math.floor(y / cellSize);
-
-        if (sala.grid[i][j] === sala.initialValue) {
-            sala.turn = (++sala.turn % sala.numberOfPlayers);
-            sala.grid[i][j] = sala.turn;
-            sala.lastMove = { x: i, y: j };
-
-            (onMove || function () { })(sala);
-        }
-    }
-}

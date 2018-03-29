@@ -1,3 +1,6 @@
+import { getUser } from "./login.js";
+import * as status from "./status.js";
+
 let images;
 
 export const board = {
@@ -15,20 +18,32 @@ export function initializeBoard() {
 export function draw(sala) {
 
     const cellSize = board.canvas.width / sala.tracks;
+    loop(sala, cellSize);
+}
 
-    Promise.all(sala.players.map(user => loadImage(user.img)))
-        .then(_images => {
-            images = _images;
-            loop();
-        });
+function loop(sala, cellSize) {
 
-    function loop() {
+    function innerLoop() {
+        if (sala.status !== status.STARTED) {
+            return requestAnimationFrame(innerLoop);
+        }
+
+        if (!images) {
+            return Promise.all(sala.players.map(user => loadImage(user.img)))
+                .then(_images => {
+                    images = _images;
+                    requestAnimationFrame(innerLoop);
+                });
+        }
+
         drawGrid(sala, cellSize);
         updateTurnLabel(sala);
-        requestAnimationFrame(loop);
+        return requestAnimationFrame(innerLoop);
     };
 
-}
+    innerLoop();
+
+};
 
 export function updateTurnLabel(sala) {
     const turn = (sala.turn + 1) % sala.numberOfPlayers;
@@ -70,4 +85,31 @@ function loadImage(url) {
         img.onerror = reject;
         img.src = url;
     });
+}
+
+export function clickHandler(sala, treatMove) {
+
+    const cellSize = board.canvas.width / sala.tracks;
+
+    board.canvas.onclick = function (e) {
+        const x = e.offsetX;
+        const y = e.offsetY;
+        const i = Math.floor(x / cellSize);
+        const j = Math.floor(y / cellSize);
+
+        getUser()
+            .then(user => {
+                const turn = (sala.turn + 1) % sala.numberOfPlayers;
+                if (sala.status === status.STARTED &&
+                    sala.grid[i][j] === sala.initialValue &&
+                    sala.players[turn].uid === user.uid
+                ) {
+                    sala.turn = turn;
+                    sala.grid[i][j] = sala.turn;
+                    sala.lastMove = { x: i, y: j };
+
+                    (treatMove || function () { })(sala);
+                }
+            });
+    }
 }

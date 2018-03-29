@@ -1,25 +1,19 @@
 import { createSala } from "./sala.js";
 import { startGame } from "./game.js";
-import { login } from "./login.js";
+import { getUser } from "./login.js";
 import { renderLobby } from "./renderLobby.js";
 import { saveLobby, checkLobby, checkSala } from "./database.js";
 
 const mainElement = document.querySelector('#main-content');
 const salaId = location.pathname.replace('/', '');
 
-let user;
-
-login()
-    .then(userP => {
-        user = userP;
-
+getUser()
+    .then(_ => {
         if (salaId) {
             return checkSala({ key: salaId })
                 .then(goToGame);
         }
-
         return goHome();
-
     });
 
 
@@ -32,18 +26,33 @@ function goHome() {
 
 function goToGame(sala) {
 
+    getUser()
+        .then(user => {
+            return addPlayer(sala, user);
+        })
+        .then(_ => fetch('./templates/game.html'))
+        .then(r => r.text())
+        .then(html => mainElement.innerHTML = html)
+        .then(_ => startGame(sala));
+}
+
+function addPlayer(sala, user) {
     sala.players = sala.players || [];
+
+    if (sala.players.find(p => p.uid === user.uid)) {
+        return;
+    }
+
+    if (sala.players.length === sala.numberOfPlayers) {
+        return alert('Você não poderá jogar pois a sala já está cheia!');
+    }
+
 
     sala.players.push({
         name: user.displayName,
         uid: user.uid,
         img: user.photoURL
     });
-
-    fetch('./templates/game.html')
-        .then(r => r.text())
-        .then(html => mainElement.innerHTML = html)
-        .then(_ => startGame(sala));
 }
 
 function initialize() {
@@ -54,7 +63,8 @@ function initialize() {
 
     createSalaButton.onclick = function () {
 
-        createSala(user)
+        getUser()
+            .then(createSala)
             .then(saveLobby)
             .then(sala => location = `./${sala.key}`)
             .catch(console.log);

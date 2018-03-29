@@ -1,3 +1,5 @@
+import * as status from "./status.js";
+
 const templatePromise = fetch('./templates/createSalaDialog.html').then(r => r.text());
 
 export function createSala(user) {
@@ -32,6 +34,8 @@ export function createSala(user) {
 
                     resolve({
                         ...values,
+                        winner: null,
+                        status: status.CREATED,
                         creatorId: user.uid,
                         players: [],
                         grid: null,

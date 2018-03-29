@@ -1,12 +1,12 @@
-import { initializeGrid, checkEnd, clickHandler } from "./gameLogic.js";
+import { initializeGrid, checkEnd } from "./gameLogic.js";
 import { saveSala, checkSala, treatMove } from "./database.js";
-import { draw, board, initializeBoard } from "./redering.js";
+import { draw, board, initializeBoard, clickHandler } from "./redering.js";
 
 export function startGame(sala) {
     initializeBoard();
     initializeGrid(sala);
     saveSala(sala);
     checkSala(sala);
-    clickHandler(board, sala, treatMove);
+    clickHandler(sala, treatMove);
     draw(sala);
 }

@@ -1,4 +1,5 @@
 import { checkEnd, initializeGrid } from "./gameLogic.js";
+import * as status from "./status.js";
 
 const database = firebase.database();
 
@@ -35,22 +36,9 @@ export function checkSala(sala) {
                 sala[key] = snapObj[key];
             }
 
-            //Juntar com a função do treat move
-            //Mas tem que ver quem ganhou e quem perdeu
-            //e se o último movimento foi feito pelo jogador logado
-            //para bloquear o movimento até que seja a vez dele de novo
-            if (checkEnd(
-                sala
-            )) {
-                setTimeout(() => {
-                    alert("Você Perdeu");
-                    initializeGrid(sala);
-                    saveSala(sala);
-                }, 500);
-            }
-
+            checkStarted(sala);
+            treatMove(sala);
             resolve(sala);
-
         });
     });
 }
@@ -59,12 +47,18 @@ export function treatMove(sala) {
     if (checkEnd(
         sala
     )) {
-        setTimeout(() => {
-            alert("Você Ganhou");
-            initializeGrid(sala);
-            saveSala(sala);
-        }, 500);
+        sala.winner = sala.players[sala.turn];
+        sala.status = status.ENDED;
     }
 
     saveSala(sala);
+}
+
+function checkStarted(sala) {
+    if (sala.status === status.CREATED &&
+        sala.players &&
+        sala.players.length === sala.numberOfPlayers) {
+        sala.status = status.STARTED;
+        saveSala(sala);
+    }
 }
