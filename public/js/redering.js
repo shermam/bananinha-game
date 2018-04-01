@@ -57,6 +57,26 @@ export function updateTurnLabel(sala) {
 
 export function getBackground(turn) {
     return images[turn];
+
+
+    // function colorir(n) {
+    //     for (var i = 0; i < n; i++) {
+    //         var r = 0;
+    //         var g = 0;
+    //         var b = 0;
+    //         var value = (3 / n) * i;
+    //         var element = document.createElement('div');
+    //         element.style.width = '50px';
+    //         element.style.height = '50px';
+
+    //         r = (1 - (Math.abs(value - 3) < value ? Math.abs(value - 3) : value)) * 255;
+    //         g = (1 - Math.abs(value - 1)) * 255;
+    //         b = (1 - Math.abs(value - 2)) * 255;
+
+    //         element.style.backgroundColor = `rgb(${Math.floor(r)},${Math.floor(g)},${Math.floor(b)})`;
+    //         document.body.appendChild(element);
+    //     }
+    // }
 }
 
 export function drawGrid(sala, cellSize) {
