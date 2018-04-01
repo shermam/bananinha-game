@@ -97,7 +97,7 @@ export function draw(sala) {
 function loop(sala, cellSize) {
 
     function innerLoop() {
-        if (sala.status !== status.STARTED) {
+        if (sala.status === status.CREATED) {
             return requestAnimationFrame(innerLoop);
         }
 
@@ -115,9 +115,12 @@ export function updateTurnLabel(sala) {
     const player = sala.players[turn];
 
     if (!player) return;
+    if (sala.status === status.ENDED) {
+        board.turnLabel.innerHTML = `${sala.players[sala.turn].name} ganhou!!!`;
+    } else {
+        board.turnLabel.innerHTML = `Vez de: ${sala.players[turn].name}`;
+    }
 
-    board.turnLabel.innerHTML = `Vez de: ${sala.players[turn].name}`;
-    board.turnLabel.style.background = getBackground(turn);
 }
 
 export function getBackground(turn) {

@@ -1,3 +1,5 @@
+import * as status from "./status.js";
+
 export function checkEnd(sala) {
     if (!sala.lastMove) {
         return;
@@ -79,6 +81,8 @@ export function checkEnd(sala) {
 }
 
 export function initializeGrid(sala) {
+    if (sala.status === status.ENDED) return;
+
     sala.grid = [];
 
     for (let i = 0; i < sala.tracks; i++) {
