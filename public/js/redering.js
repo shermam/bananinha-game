@@ -1,7 +1,80 @@
 import { getUser } from "./login.js";
 import * as status from "./status.js";
 
-let images;
+// let images;
+// if (!images) {
+//     return Promise.all(sala.players.map(user => loadImage(user.img)))
+//         .then(_images => {
+//             images = _images;
+//             requestAnimationFrame(innerLoop);
+//         });
+// }
+
+let pieces;
+
+function createPieces(numberOfPlayers) {
+    return colorir(numberOfPlayers)
+        .map((color, index) => {
+            return makePiece(color, index % 2 === 0);
+        });
+}
+
+function makePiece(color, isCircle) {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    const size = 400;
+    const lineWidth = size / 6;
+    const quarterDiagonal = ((Math.sqrt(2 * (size * size))) / 2) - lineWidth * 2.25;
+
+    canvas.width = canvas.height = size;
+
+    context.strokeStyle = color;
+    context.lineWidth = lineWidth;
+    context.lineCap = 'round';
+
+    context.beginPath();
+
+    if (isCircle) {
+        context.ellipse(
+            size / 2,
+            size / 2,
+            size / 2 - lineWidth,
+            size / 2 - lineWidth,
+            0,
+            0,
+            2 * Math.PI
+        );
+    } else {
+        context.moveTo(size / 2 - quarterDiagonal, size / 2 - quarterDiagonal);
+        context.lineTo(size / 2 + quarterDiagonal, size / 2 + quarterDiagonal);
+        context.moveTo(size / 2 + quarterDiagonal, size / 2 - quarterDiagonal);
+        context.lineTo(size / 2 - quarterDiagonal, size / 2 + quarterDiagonal);
+    }
+
+    context.stroke();
+    context.closePath();
+
+    return canvas;
+}
+
+function colorir(n) {
+    const colors = [];
+    for (var i = 0; i < n; i++) {
+        var value = (3 / n) * i;
+        var r = (1 - (Math.abs(value - 3) < value ? Math.abs(value - 3) : value)) * 255;
+        var g = (1 - Math.abs(value - 1)) * 255;
+        var b = (1 - Math.abs(value - 2)) * 255;
+
+        colors.push([r, g, b].reduce((previous, value) => {
+            return previous + Math
+                .floor(value < 0 ? 0 : value)
+                .toString(16)
+                .padStart(2, 0)
+                .toUpperCase();
+        }, '#'));
+    }
+    return colors;
+}
 
 export const board = {
     canvas: null,
@@ -16,8 +89,8 @@ export function initializeBoard() {
 }
 
 export function draw(sala) {
-
     const cellSize = board.canvas.width / sala.tracks;
+    pieces = createPieces(sala.numberOfPlayers);
     loop(sala, cellSize);
 }
 
@@ -26,14 +99,6 @@ function loop(sala, cellSize) {
     function innerLoop() {
         if (sala.status !== status.STARTED) {
             return requestAnimationFrame(innerLoop);
-        }
-
-        if (!images) {
-            return Promise.all(sala.players.map(user => loadImage(user.img)))
-                .then(_images => {
-                    images = _images;
-                    requestAnimationFrame(innerLoop);
-                });
         }
 
         drawGrid(sala, cellSize);
@@ -56,27 +121,7 @@ export function updateTurnLabel(sala) {
 }
 
 export function getBackground(turn) {
-    return images[turn];
-
-
-    // function colorir(n) {
-    //     for (var i = 0; i < n; i++) {
-    //         var r = 0;
-    //         var g = 0;
-    //         var b = 0;
-    //         var value = (3 / n) * i;
-    //         var element = document.createElement('div');
-    //         element.style.width = '50px';
-    //         element.style.height = '50px';
-
-    //         r = (1 - (Math.abs(value - 3) < value ? Math.abs(value - 3) : value)) * 255;
-    //         g = (1 - Math.abs(value - 1)) * 255;
-    //         b = (1 - Math.abs(value - 2)) * 255;
-
-    //         element.style.backgroundColor = `rgb(${Math.floor(r)},${Math.floor(g)},${Math.floor(b)})`;
-    //         document.body.appendChild(element);
-    //     }
-    // }
+    return pieces[turn];
 }
 
 export function drawGrid(sala, cellSize) {
